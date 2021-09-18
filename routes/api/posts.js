@@ -3,9 +3,6 @@ const {check, validationResult} = require('express-validator');
 const router = express.Router();
 const Post = require('../../models/Posts')
 
-const router = express.Router();
-const Post = require("./models/Posts");
-
 // @route  POST api/post
 // @desc   Create a post
 // @access Private
