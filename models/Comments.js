@@ -4,7 +4,6 @@ const Schema = require.Schema;
 const CommentSchema = new  mongoose.Schema({
     commentNumber: {
         type: Number,
-        required: true,
     },
     username: {
         type: String,
@@ -21,6 +20,11 @@ const CommentSchema = new  mongoose.Schema({
         type: String,
         minLength: 1,
         required: true
+    },
+    postID: {
+        type: Number,
+        required: true,
+        unique: true
     }
 }); 
 
