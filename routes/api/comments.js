@@ -2,6 +2,7 @@ const express = require('express');
 const {check, validationResult} = require('express-validator');
 const router = express.Router();
 const Post = require('../../models/Posts')
+const Comment = require('../../models/Comments')
 
 // @route  POST api/comments
 // @desc   Add a comment to an existing post
@@ -66,5 +67,47 @@ router.get("/delete/:id/:commentNumber", async (req, res) => {
 		res.send({ error: "Comment doesn't exist!" })
 	}
 })
+
+// @route  POST api/post
+// @desc   Remove a like from a comment
+// @access Private
+// Crud stuff here
+router.post('unlike/:id/:commentNumber', async (req, res) => {
+    try {
+          const filter = { postID: req.params.id, commentNumber: req.params.commentNumber};
+
+          const comment = await Comment.findOne({ postID: req.params.id, commentNumber: req.params.commentNumber});
+          
+          if(comment.likes > 0){
+            const update = { likes: comment.likes - 1 };
+            const updatedComment = await Post.findOneAndUpdate({ postID: req.params.id }, update);
+          }else
+            res.status(400).send('Can\'t unlike a comment with no likes');
+          res.json(updatedPost);
+          console.log(req.body);
+    } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server error');
+    }
+}) 
+
+// @route  POST api/post
+// @desc   Add a like to a comment
+// @access Private
+// Crud stuff here
+router.post('like/:id/:commentNumber', async (req, res) => {
+      try {
+            const filter = { postID: req.params.id, commentNumber: req.params.commentNumber};
+
+            const comment = await Comment.findOne({ postID: req.params.id, commentNumber: req.params.commentNumber});
+            const update = { likes: comment.likes + 1 };
+            const updatedComment = await Comment.findOneAndUpdate({ postID: req.params.id }, update);
+            res.json(updatedComment);
+            console.log(req.body);
+      } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server error');
+      }
+  })
 
 module.exports = router;

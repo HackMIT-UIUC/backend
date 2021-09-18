@@ -72,6 +72,48 @@ router.post('/:id', [
       }
   })
 
+// @route  POST api/post
+// @desc   Add a like to a post
+// @access Private
+// Crud stuff here
+router.post('like/:id', async (req, res) => {
+      try {
+            const filter = { postID: req.params.id };
+
+            const post = await Post.findOne({ postID: req.params.id })
+            const update = { likes: post.likes + 1 };
+            const updatedPost = await Post.findOneAndUpdate({ postID: req.params.id }, update);
+            res.json(updatedPost);
+            console.log(req.body);
+      } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server error');
+      }
+  })
+
+
+// @route  POST api/post
+// @desc   Remove a like from a post
+// @access Private
+// Crud stuff here
+router.post('unlike/:id', async (req, res) => {
+    try {
+          const filter = { postID: req.params.id };
+
+          const post = await Post.findOne({ postID: req.params.id })
+          if(post.likes > 0){
+            const update = { likes: post.likes - 1 };
+            const updatedPost = await Post.findOneAndUpdate({ postID: req.params.id }, update);
+          }else
+            res.status(400).send('Can\'t unlike a post with no likes');
+          res.json(updatedPost);
+          console.log(req.body);
+    } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server error');
+    }
+}) 
+
 //
 // @route  GET api/post
 // @desc   Retrieve post by its id
