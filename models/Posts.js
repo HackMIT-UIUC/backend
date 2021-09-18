@@ -42,6 +42,14 @@ const PostSchema = new  mongoose.Schema({
               return array.length > 0 && array.every((v) => typeof v === 'string');
             }
         }
+    },
+    comments: {
+        type: Array,
+        validate : {
+            validator : function(array) {
+              return array.every((v) => typeof v === 'number');
+            }
+        }
     }
 }); 
 
