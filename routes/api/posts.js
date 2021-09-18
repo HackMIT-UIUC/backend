@@ -10,19 +10,22 @@ const Post = require('../../models/Posts')
 router.post('/', [
   check('message', 'post content is required').not().isEmpty(),
 ],
-(req, res) => {
+async (req, res) => {
     const error = validationResult(req);
     if(!error.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-        const newPost = new Posts({
+        const newPost = new Post({
             postID: req.body["postID"],
             username: req.body["username"],
+            title: req.body["title"],
+            picture: req.body["picture"],
+            likes: req.body["likes"],
             message: req.body["message"],
-            symptomps: req.body["symptomps"],
+            symptoms: req.body["symptoms"],
         })
-        const post = newPost.save();
+        const post = await newPost.save();
         res.json(post);
         console.log(req.body);
     } catch (err) {
@@ -34,10 +37,11 @@ router.post('/', [
 // @route  GET api/post
 // @desc   Retrieve post by its id
 // @access Public
-router.get("/post/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
 	try {
 		const post = await Post.findOne({ postID: req.params.id })
-		res.send(post)
+		console.log(req.params.id);
+        res.send(post)
 	} catch {
 		res.status(404)
 		res.send({ error: "Post doesn't exist!" })
@@ -47,10 +51,11 @@ router.get("/post/:id", async (req, res) => {
 // @route  GET api/post
 // @desc   Retrieve all posts by a user
 // @access Public
-router.get("/posts/:username", async (req, res) => {
+router.get("/username/:username", async (req, res) => {
 	try {
 		const posts = await Post.find({ username: req.params.username })
-		res.send(posts)
+        console.log(req.params.username)
+        res.send(posts)
 	} catch {
 		res.status(404)
 		res.send({ error: "User has no posts!" })
@@ -64,6 +69,7 @@ router.get("/delete/:id", async (req, res) => {
 	try {
 		const post = await Post.findOneAndDelete({ postID: req.params.id })
 		res.send(post)
+
 	} catch {
 		res.status(404)
 		res.send({ error: "Post doesn't exist!" })

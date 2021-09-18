@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = require.Schema;
 
-const postSchema = new  mongoose.Schema({
+const PostSchema = new  mongoose.Schema({
     postID: {
         type: Number,
         required: true,
@@ -19,9 +19,19 @@ const postSchema = new  mongoose.Schema({
         required: true,
         unique: true
     },
+    title: {
+        type: String,
+        required: true,
+    },
+    picture: {
+        type: String,
+    },
+    likes: {
+        type: Number,
+    },
     message: {
         type: String,
-        minLength: 50,
+        minLength: 1,
         required: true
     },
     symptoms: {
@@ -29,10 +39,10 @@ const postSchema = new  mongoose.Schema({
         required: true,
         validate : {
             validator : function(array) {
-              return arrazy.length > 0 && array.every((v) => typeof v === 'string');
+              return array.length > 0 && array.every((v) => typeof v === 'string');
             }
         }
     }
-}) 
+}); 
 
-let Post = mongoose.model('Post', postSchema);
+module.exports = mongoose.model('post', PostSchema);
