@@ -20,7 +20,7 @@ async (req, res) => {
         const post = await Post.findOne({ postID: req.params.id });
 
         const newComment = new Comment({
-            commentNumber : post.comments.length,
+            commentNumber : post.comments == undefined ? 1 : post.comments.length,
             postID: req.body["postID"],
             username: req.body["username"],
             picture: req.body["picture"],
