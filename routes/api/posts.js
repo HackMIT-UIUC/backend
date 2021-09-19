@@ -50,18 +50,18 @@ router.post('/:id', [
       try {
             const filter = { postID: req.params.id };
 
-            const post = await Post.findOne({ postID: req.params.id })
+            const post = await Post.findOne(filter)
             if(!req.body("picture").isEmpty()){
                 const update = { picture: req.body("picture") };
-                const post = await Post.findOneAndUpdate({ postID: req.params.id }, update);
+                const post = await Post.findOneAndUpdate(filter, update);
             }
             if(!req.body("message").isEmpty()){
                 const update = { picture: req.body("message") };
-                const post = await Post.findOneAndUpdate({ postID: req.params.id }, update);
+                const post = await Post.findOneAndUpdate(filter, update);
             }
             if(!req.body("symptoms").isEmpty()){
                 const update = { picture: req.body("symptoms") };
-                const post = await Post.findOneAndUpdate({ postID: req.params.id }, update);
+                const post = await Post.findOneAndUpdate(filter, update);
             }
 
             res.json(post);

@@ -23,11 +23,9 @@ async (req, res) => {
             commentNumber : post.comments.length,
             postID: req.body["postID"],
             username: req.body["username"],
-            title: req.body["title"],
             picture: req.body["picture"],
             likes: req.body["likes"],
-            message: req.body["message"],
-            symptoms: req.body["symptoms"],
+            message: req.body["message"]
         })
         const comment = await newComment.save();
         //Find comment array of the post
@@ -44,6 +42,39 @@ async (req, res) => {
         res.status(500).send('Server error');
     }
 })
+
+// @route  POST api/post
+// @desc   Update a comment
+// @access Private
+// Crud stuff here
+router.post('/:id/:commentNumber', [
+    check('message', 'comment content is required').not().isEmpty(),
+  ],
+  async (req, res) => {
+      const error = validationResult(req);
+      if(!error.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+      }
+      try {
+            const filter = { postID: req.params.id, commentNumber: req.params.commentNumber};
+
+            const post = await Comment.findOne(filter)
+            if(!req.body("picture").isEmpty()){
+                const update = { picture: req.body("picture") };
+                const post = await Comment.findOneAndUpdate(filter, update);
+            }
+            if(!req.body("message").isEmpty()){
+                const update = { picture: req.body("message") };
+                const post = await Comment.findOneAndUpdate(filter, update);
+            }
+
+            res.json(post);
+            console.log(req.body);
+      } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server error');
+      }
+  })
 
 // @route  GET api/comments
 // @desc   delete comment based on post id and comment number
